@@ -7,6 +7,7 @@ using game_1.Agents;
 using game_1.Audio;
 using game_1.Particles;
 using game_1.Projectiles;
+using game_1.Rendering;
 using game_1.Saving;
 using game_1.Weapons;
 using game_1.World;
@@ -123,6 +124,9 @@ public class TopDownShooter : Game
 
     private Player _player;
 
+    // Draws the player and mobs as lit 3D meshes built in code.
+    private Renderer3D _renderer;
+
     private MobManager _mobManager;
 
     private ProjectileManager _projectileManager;
@@ -188,6 +192,7 @@ public class TopDownShooter : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+        _renderer = new Renderer3D(GraphicsDevice);
         _font = Content.Load<SpriteFont>("Bangers");
         _heartTexture = Content.Load<Texture2D>("HeartPixelArt");
         _sounds.LoadContent(Content);
@@ -195,7 +200,7 @@ public class TopDownShooter : Game
         _mobManager.LoadContent(Content);
         _projectileManager.LoadContent(Content);
 
-        // Laying out the title screen needs the font and the player texture.
+        // Laying out the title screen needs the font and the player's size.
         ShowTitle();
     }
 
@@ -254,22 +259,35 @@ public class TopDownShooter : Game
 
         Matrix shake = _screenShake.Transform;
 
-        // The world, which shakes.
-        _spriteBatch.Begin(transformMatrix: shake);
+        bool inRun = _state is GameState.Playing or GameState.Paused;
+
+        // The world, which shakes. Sprites and 3D meshes take turns, as each
+        // has to finish drawing before the other can start, and the turns are
+        // laid out to keep everything in the same order as before.
 
         // The floor first, so everything else stands on it.
+        _spriteBatch.Begin(transformMatrix: shake);
         _tilemap.Draw(_spriteBatch);
+        _spriteBatch.End();
 
-        if (_state is GameState.Playing or GameState.Paused)
+        if (inRun)
         {
-            _mobManager.Draw(gameTime, _spriteBatch);
-            _projectileManager.Draw(gameTime, _spriteBatch);
+            _renderer.Begin(shake);
+            _mobManager.Draw(gameTime, _renderer);
         }
 
-        // The player is on screen in every state.
-        _player.Draw(gameTime, _spriteBatch);
-
+        // Shots and the melee swing go over the mobs but under the player, so
+        // the swing never hides who is swinging it. The swing only shows while
+        // alive: once the run ends nothing ticks its timer, so a dying blow
+        // would otherwise sit on screen behind the game over prompt.
+        _spriteBatch.Begin(transformMatrix: shake);
+        if (inRun) _projectileManager.Draw(gameTime, _spriteBatch);
+        if (_player.IsAlive) _player.Melee.Draw(gameTime, _spriteBatch);
         _spriteBatch.End();
+
+        // The player is on screen in every state.
+        _renderer.Begin(shake);
+        _player.Draw(gameTime, _renderer);
 
         // Particles, shaken the same so they stay put against the world, and in
         // a batch of their own as they are the only thing blended additively.
@@ -280,7 +298,7 @@ public class TopDownShooter : Game
         // Text and hearts, on top of everything and held still to stay readable.
         _spriteBatch.Begin();
 
-        if (_state is GameState.Playing or GameState.Paused)
+        if (inRun)
         {
             DrawRunTimer();
             DrawHealth();

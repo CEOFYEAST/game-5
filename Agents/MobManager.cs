@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using game_1.Rendering;
 using game_1.Saving;
 
 namespace game_1.Agents;
@@ -94,10 +95,10 @@ public class MobManager
         _mobs.RemoveAll(mob => !mob.IsAlive);
     }
 
-    public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+    public void Draw(GameTime gameTime, Renderer3D renderer)
     {
         foreach (Mob mob in _mobs)
-            mob.Draw(gameTime, spriteBatch);
+            mob.Draw(gameTime, renderer);
     }
 
     // Spawns tighten steadily over the first SpawnRampDuration seconds, then
@@ -160,7 +161,6 @@ public class MobManager
 
         Mob mob = Create(spawnTick ? TickKind : ZombieKind);
 
-        // The texture has to be loaded before we know how far off-screen to place it.
         mob.Position = PointJustOffScreen(mob.DrawRadius);
 
         _mobs.Add(mob);

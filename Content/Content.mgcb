@@ -42,19 +42,6 @@
 /processorParam:Version=3.8.5.1
 /build:EnemyDeathSound.wav
 
-#begin EnemyPlaceholder.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/processorParam:Version=3.8.5.1
-/build:EnemyPlaceholder.png
-
 #begin HeartPixelArt.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -87,19 +74,6 @@
 /processorParam:Quality=Best
 /processorParam:Version=3.8.5.1
 /build:MeleeSound.wav
-
-#begin PlayerPlaceholder.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/processorParam:Version=3.8.5.1
-/build:PlayerPlaceholder.png
 
 #begin ProjectilePlaceholder.png
 /importer:TextureImporter

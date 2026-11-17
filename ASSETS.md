@@ -1,9 +1,5 @@
 Content/Bangers/Bangers-Regular.ttf - Bangers font created by Vernon Adams, released on Google Fonts (https://fonts.google.com/specimen/Bangers) under the Open Font License
 
-Content/PlayerPlaceholder.png - Created by Benton Diebold for this game
-
-Content/EnemyPlaceholder.png - Created by Benton Diebold for this game
-
 Content/ProjectilePlaceholder.png - Created by Benton Diebold for this game
 
 Content/MeleePlaceholder.png - Created by Benton Diebold for this game
